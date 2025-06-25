@@ -13,6 +13,7 @@ def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
     :param pkt: The packet to be forwarded
     :return: The packet to be forwarded ( changed / unchanged )
     """
+    pkt.src = "08:00:27:3c:d9:98"
     return pkt
 
 
