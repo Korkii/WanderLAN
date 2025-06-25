@@ -1,19 +1,23 @@
 from scapy.all import *
-from typing import Callable
-
+from typing import Callable, Union
 
 IF_FROM = "enp0s8"
 IF_TO = "enp0s9"
+MY_MAC = "08:00:27:3c:d9:98" 
 
-
-def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
+def forwarding(pkt: scapy.layers.l2.Ether) -> Union[scapy.layers.l2.Ether, bool]:
     """
     A wrapper function for forwarded packets
 
     :param pkt: The packet to be forwarded
     :return: The packet to be forwarded ( changed / unchanged )
     """
-    pkt.src = "08:00:27:3c:d9:98"
+    if pkt.layers()[0] != scapy.layers.l2.Ether:
+        return False
+    if len(pkt.layers()) > 0:
+        if pkt.layers()[1] == scapy.layers.l2.ARP:
+            return False
+    pkt.src = MY_MAC 
     return pkt
 
 
