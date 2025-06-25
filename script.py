@@ -9,7 +9,7 @@ THIS_MAC = "08:00:27:3c:d9:98"
 nat_table = {}
 MIN_NAT_PORT = 49152 
 MAX_NAT_PORT = 65535
-
+DENIED_UDP_PORT = 12345
 
 def forward_out(pkt):
     """
@@ -47,9 +47,20 @@ def forward_in(pkt):
     :return: The packet for be forwarded inside ( changed )
     """
     print(f"Layers: {pkt.layers()}")
+    if len(pkt.layers()) == 2 or pkt.layers()[1] == scapy.layers.l2.ARP:
+        return False
+
+    if pkt.layers()[2] == scapy.layers.inet.ICMP:
+        return False
+    
     entry = nat_table.get((pkt[1].dst, pkt[2].dport))
     if not entry:
         return False
+
+    if pkt.layers()[2] == scapy.layers.inet.UDP:
+        if pkt[2].dport == DENIED_UDP_PORT:
+            del nat_table[(pkt[1].dst, pkt[2].dport)]
+            return False
 
     pkt[1].dst = entry[0]
     pkt[2].dport = entry[1]
