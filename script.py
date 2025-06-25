@@ -13,7 +13,8 @@ def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
     :param pkt: The packet to be forwarded
     :return: The packet to be forwarded ( changed / unchanged )
     """
-    print(type(pkt))
+    if len(pkt.layers()) > 0:
+        pkt[1].src = "192.168.56.101"
     return pkt
 
 
