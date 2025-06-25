@@ -4,6 +4,8 @@ from typing import Callable
 
 IF_FROM = "enp0s8"
 IF_TO = "enp0s9"
+THIS_IP = "192.168.56.101"
+THIS_MAC = "08:00:27:3c:d9:98"
 
 
 def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
@@ -13,8 +15,9 @@ def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
     :param pkt: The packet to be forwarded
     :return: The packet to be forwarded ( changed / unchanged )
     """
+    pkt.src = THIS_MAC
     if len(pkt.layers()) > 0:
-        pkt[1].src = "192.168.56.101"
+        pkt[1].src = THIS_IP
     return pkt
 
 
