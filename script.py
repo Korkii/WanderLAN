@@ -14,12 +14,9 @@ def forwarding(pkt: Any) -> Any:
     """
     if pkt.layers()[0] != scapy.layers.l2.Ether:
         return False
-    if len(pkt.layers()) > 1:
-        if pkt.layers()[1] == scapy.layers.l2.ARP:
+    if len(pkt.layers()) <= 2:
             return False
-        if len(pkt.layers()) > 2:
-            if pkt.layers()[2] == scapy.layers.inet.ICMP:
-                return False
+
     pkt.src = MY_MAC 
     return pkt
 
