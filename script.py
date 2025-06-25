@@ -8,7 +8,7 @@ THIS_IP = "192.168.56.101"
 THIS_MAC = "08:00:27:3c:d9:98"
 
 
-def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
+def forwarding(pkt):
     """
     A wrapper function for forwarded packets
 
