@@ -13,7 +13,6 @@ def forwarding(pkt: scapy.layers.l2.Ether) -> scapy.layers.l2.Ether:
     :param pkt: The packet to be forwarded
     :return: The packet to be forwarded ( changed / unchanged )
     """
-    print(type(pkt))
     return pkt
 
 
