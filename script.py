@@ -3,9 +3,9 @@ from typing import Callable, Union, Any
 
 IF_FROM = "enp0s8"
 IF_TO = "enp0s9"
-MY_MAC = "08:00:27:3c:d9:98" 
+IF_FROM_MAC = "08:00:27:3c:d9:98" 
 
-def forwarding(pkt) -> Union[Any, bool]:
+def forwarding(pkt: Any) -> Any:
     """
     A wrapper function for forwarded packets
 
@@ -14,16 +14,19 @@ def forwarding(pkt) -> Union[Any, bool]:
     """
     if pkt.layers()[0] != scapy.layers.l2.Ether:
         return False
-    if len(pkt.layers()) > 0:
+    if len(pkt.layers()) > 1:
         if pkt.layers()[1] == scapy.layers.l2.ARP:
             return False
+        if len(pkt.layers()) > 2:
+            if pkt.layers()[2] == scapy.layers.inet.ICMP:
+                return False
     pkt.src = MY_MAC 
     return pkt
 
 
 def bridge_ifs(if1: NetworkInterface, if2: NetworkInterface, xfrm12: Callable = None, xfrm21: Callable  = None) -> None:
     """
-    Bridges between two interfaces
+    Apply functions on packets from two interfaces, and decide if to forward to eachother.
 
     :param if1: The first interface to bridge with
     :param if2: The second interface to bridge with
@@ -31,7 +34,6 @@ def bridge_ifs(if1: NetworkInterface, if2: NetworkInterface, xfrm12: Callable = 
     :param xfrm21: the callable to apply to the packet coming from if2
     """
     bridge_and_sniff(if1, if2, xfrm12, xfrm21)
-    print("Done")
 
 
 if __name__ == '__main__':
