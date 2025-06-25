@@ -32,7 +32,7 @@ def forward_in(pkt):
 
     pkt[1].dst = entry[0]
     pkt[2].dport = entry[1]
-
+    del nat_table[(pkt[1].dst, pkt[2].dport)]
     return pkt
 
 
