@@ -16,7 +16,7 @@ def forwarding(pkt):
     :return: The packet to be forwarded ( changed / unchanged )
     """
     pkt.src = THIS_MAC
-    if len(pkt.layers()) > 0:
+    if len(pkt.layers()) > 1:
         pkt[1].src = THIS_IP
     return pkt
 
